@@ -17,6 +17,8 @@ Fixed labels after an entry relate it to others: **Kind of** names the broader t
 - Not to be confused with: [venue](#venue)
 - Defined in: [requirements.md](requirements.md#client)
 
+<a id="ddg"></a>**DDG** (*Digitale-Dienste-Gesetz*) *(domain)*: the German Digital Services Act. Its §5 says which websites must carry a legal notice (*Impressum*) naming who runs them. Example: a shop website must; whether a free open-source project page must is checked in [OPEN-F](requirements.md#open-f).
+
 <a id="file-system-access-api"></a>**File System Access API** *(engineering)*: a browser interface that lets a web app read and write files in a folder the user picked once. Like a .NET program holding a path from a `FolderBrowserDialog`, except the browser asks the user for permission. Example: abendkasse saves every invoice into `Rechnungen/2026/` without a save dialog. Available in desktop Chrome and Edge, not in Safari or on phones.
 
 - See also: [progressive web app](#pwa)
@@ -24,6 +26,8 @@ Fixed labels after an entry relate it to others: **Kind of** names the broader t
 <a id="first-release"></a>**first release** (MVP) *(project)*: the smallest version of abendkasse that Thomas uses instead of his Word template.
 
 - Defined in: [requirements.md](requirements.md#first-release)
+
+<a id="gdpr"></a>**GDPR** (DSGVO) *(domain)*: the EU General Data Protection Regulation. It governs how personal data, such as a name, an address or an IP address, may be stored and used. Example: a performer keeping a private client's address for an invoice may do so, because the law requires keeping invoices.
 
 <a id="gig-data"></a>**gig data** *(project)*: what changes from one invoice to the next: venue, event name, date, start and end time, fee.
 
