@@ -30,9 +30,14 @@ Fixed labels after an entry relate it to others: **Kind of** names the broader t
 - See also: [profile](#profile)
 - Defined in: [requirements.md](requirements.md#gig-data)
 
-<a id="invoice-number"></a>**invoice number** *(project)*: the number that identifies an invoice uniquely for the performer, in the form `YYYY-NNN`. Example: `2026-003`.
+<a id="invoice-number"></a>**invoice number** *(project)*: the number that identifies an invoice uniquely for the performer, built from the year, the device's [number range](#number-range) and a counter. Example: `2026-A003`.
 
 - Defined in: [requirements.md](requirements.md#invoice-number)
+
+<a id="number-range"></a>**number range** *(project)*: a series of invoice numbers that only one device issues, marked by a letter. Example: the laptop issues `2026-A001`, `2026-A002`; the phone `2026-B001`.
+
+- See also: [invoice number](#invoice-number)
+- Defined in: [requirements.md](requirements.md#number-range)
 
 <a id="performer"></a>**performer** *(project)*: the person who played the gig and issues the invoice. Example: a DJ who invoices a club.
 

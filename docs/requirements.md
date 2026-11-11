@@ -1,11 +1,11 @@
 # abendkasse: Verifiable Product Requirements
-Version: 0.1 draft | 11 November 2026
+Version: 0.2 draft | 11 November 2026
 
 **Status:**
 
-- First draft from the intake conversation of 11 November 2026, for the first elicitation pass. Only the [first release](glossary.md#first-release) (the MVP) is detailed. Later capabilities are listed in [section 10](#10-later-releases) without detail.
-- The first release supports one tax case: the [small-business rule](glossary.md#small-business-rule) of §19 [UStG](glossary.md#ustg).
-- The biggest technical risk is sending the PDF as an email attachment from a browser ([OPEN-B](#open-b)). A spike settles it before the sending flow is built.
+- After the first elicitation pass with Thomas (11 November 2026). Only the [first release](glossary.md#first-release) (the MVP) is detailed. Later capabilities are listed in [section 10](#10-later-releases) without detail.
+- The first release supports one tax case: the [small-business rule](glossary.md#small-business-rule) of §19 [UStG](glossary.md#ustg). Its first platform is a Windows laptop. Phones follow in the same release.
+- The biggest technical risk is sending the PDF as an email attachment from a browser ([OPEN-B](#open-b)). A spike settles it before the sending flow is built. The format of per-device [number ranges](#number-range) is still to be designed ([OPEN-A](#open-a)).
 - Open decisions are collected in [section 11](#open-decisions); how the document got here is in the [revision history](#revision-history).
 
 ## Requirement conventions
@@ -23,11 +23,13 @@ Version: 0.1 draft | 11 November 2026
 
 <a id="gig-data"></a>**Gig data** = what changes from one invoice to the next: the venue (and with it the client), the event name, the date, the start and end time, and the fee.
 
-<a id="invoice-number"></a>**Invoice number** = the number that identifies an invoice uniquely for the performer. Example: `2026-003`.
+<a id="invoice-number"></a>**Invoice number** = the number that identifies an invoice uniquely for the performer. It is built from the year, the device's [number range](#number-range) and a counter. Example: `2026-A003`.
+
+<a id="number-range"></a>**Number range** = a series of invoice numbers that only one device issues, marked by a letter in the number. Example: the laptop issues `2026-A001`, `2026-A002`, …, the phone `2026-B001`, … Two devices never issue from the same range, so their numbers cannot collide without any synchronisation.
 
 <a id="reference-invoice"></a>**The reference invoice** = Thomas's current invoice, made from a Word template (`Rechnung_TANTE_THOMAS_Frau_Holle_2026_06_14.docx`, kept privately, not in this repository). It is a cross-check for layout and content, not a specification. Its personal data (address, IBAN, tax number) never appears in this repository, its examples or its tests ([REQ-024](#req-024)).
 
-<a id="reference-platforms"></a>**Reference platforms** (used by every platform requirement): Windows 11 with current Chrome and Edge; macOS with current Safari and Chrome; Android with current Chrome; iOS with current Safari. "Current" means the stable release at the time of testing. **[OPEN-E](#open-e):** which exact devices Thomas tests on.
+<a id="reference-platforms"></a>**Reference platforms** (used by every platform requirement): Windows 11 with current Chrome and Edge; macOS with current Safari and Chrome; Android with current Chrome; iOS with current Safari. "Current" means the stable release at the time of testing. Windows 11 is the first platform: Thomas writes most invoices on his Windows laptop (Thomas, 11 November 2026). **[OPEN-E](#open-e):** which phones and Apple devices Thomas can test on.
 
 ## 1. Purpose and users
 
@@ -41,15 +43,15 @@ Version: 0.1 draft | 11 November 2026
 
 ## 2. Invoice content
 
-<a id="req-005"></a>**REQ-005 — Mandatory details (SHALL).** Every invoice SHALL contain: (a) the full name and address of the performer; (b) the full name and address of the client; (c) the performer's tax number; (d) the invoice date; (e) the [invoice number](#invoice-number); (f) the type and extent of the service; (g) the date of the service; (h) the fee; (i) the note that no VAT is charged because of the small-business rule. Rationale: for a small business, §34a UStDV (in force since 1 January 2025) requires (a), (b), (d), (f), (h) and (i). §14 (4) UStG, which applies to every other business, also requires (c), (e) and (g). The invoice carries all of them, so a client's bookkeeping never rejects it. **[OPEN-F](#open-f):** the legal list is checked against the current text of both before the first release.
+<a id="req-005"></a>**REQ-005 — Mandatory details (SHALL).** Every invoice SHALL contain: (a) the full name and address of the performer; (b) the full name and address of the client; (c) the invoice date; (d) the [invoice number](#invoice-number); (e) the type and extent of the service; (f) the date of the service; (g) the fee; (h) the note that no VAT is charged because of the small-business rule. WHERE the performer has entered a tax number (*Steuernummer*) or a VAT ID (*USt-IdNr.*), the invoice SHALL show it. IF the profile has neither, THEN abendkasse SHALL warn once in the profile and SHALL still generate invoices. abendkasse SHALL NOT offer the personal tax ID (*Steuer-ID*) as a substitute. Rationale: for a small business, §34a UStDV (in force since 1 January 2025) requires (a), (b), (c), (e), (g) and (h). §14 (4) UStG, which applies to every other business, also requires (d), (f) and a tax number. The invoice number and the service date cost nothing, so they are always shown. Not every performer has a tax number, for example one who has not yet registered with the tax office. So it is shown when present (Thomas, 11 November 2026). **[OPEN-F](#open-f):** the legal list is checked against the current text of both before the first release.
 
-<a id="req-006"></a>**REQ-006 — Service description (SHALL).** The service SHALL be described by one item line built from a template in the [profile](#profile) and the [gig data](#gig-data). The default template SHALL produce text of the form "DJ-Tätigkeit am 19.09.2026, von 23:00 Uhr bis 20.09.2026 um 01:00 Uhr, „Example Night“, Club Example, Hamburg". Rationale: this is the reference invoice's wording. It states the date of the service ([REQ-005](#req-005) (g)) without a separate field.
+<a id="req-006"></a>**REQ-006 — Service description (SHALL).** The service SHALL be described by one item line built from a template in the [profile](#profile) and the [gig data](#gig-data). The default template SHALL produce text of the form "DJ-Tätigkeit am 19.09.2026, von 23:00 Uhr bis 20.09.2026 um 01:00 Uhr, „Example Night“, Club Example, Hamburg". Rationale: this is the reference invoice's wording. It states the date of the service ([REQ-005](#req-005) (f)) without a separate field.
 
 <a id="req-007"></a>**REQ-007 — Gigs past midnight (SHALL).** IF the end time is earlier than the start time, THEN the gig SHALL be taken to end on the following day, and the item text SHALL name both dates. Rationale: most club gigs end after midnight. The reference invoice shows such a gig.
 
-<a id="req-008"></a>**REQ-008 — Small-business note (SHALL).** The invoice SHALL carry the note "Gemäß § 19 UStG wird keine Umsatzsteuer ausgewiesen." and SHALL show the fee as the total, with no VAT line. Rationale: the note is mandatory ([REQ-005](#req-005) (i)). Showing VAT under the small-business rule would make the performer owe it (§14c UStG).
+<a id="req-008"></a>**REQ-008 — Small-business note (SHALL).** The invoice SHALL carry the note "Gemäß § 19 UStG wird keine Umsatzsteuer ausgewiesen." and SHALL show the fee as the total, with no VAT line. Rationale: the note is mandatory ([REQ-005](#req-005) (h)). Showing VAT under the small-business rule would make the performer owe it (§14c UStG).
 
-<a id="req-009"></a>**REQ-009 — Invoice language (SHALL).** The invoice SHALL be in German, with German date and amount formats (`19.09.2026`, `50,00 EUR`). Rationale: the clients are German businesses.
+<a id="req-009"></a>**REQ-009 — Language (SHALL).** The invoice SHALL be in German, with German date and amount formats (`19.09.2026`, `50,00 EUR`). The app's own screens SHALL be in German in the first release. Their texts SHOULD be kept in one place, so that a later release can add English. Rationale: the clients are German businesses. The first users are performers in Germany (Thomas, 11 November 2026).
 
 ## 3. Fixed data
 
@@ -57,7 +59,11 @@ Version: 0.1 draft | 11 November 2026
 
 <a id="req-011"></a>**REQ-011 — Clients and venues remembered (SHALL).** WHEN the performer creates an invoice for a new venue, THEN abendkasse SHALL ask for the venue's city and its [client](#client) (a known client or a new one with name and address) and SHALL remember both. WHEN the performer chooses a known venue, THEN the client SHALL be filled in without further input. Rationale: most gigs repeat at the same few venues. The client's address is the field most tedious to retype.
 
-<a id="req-012"></a>**REQ-012 — Invoice number assigned automatically (SHALL).** abendkasse SHALL propose the next [invoice number](#invoice-number) in the form `YYYY-NNN`: the year of the invoice date and a counter that starts at 001 each year. The performer SHALL be able to set the counter once, so that numbering continues from invoices written before abendkasse. abendkasse SHALL NOT issue the same invoice number twice on one device. Rationale: invoice numbers must be unique (§14 (4) no. 4 UStG). The reference invoice uses this form (`2026-002`). **[OPEN-A](#open-a):** how numbers stay unique when the performer uses abendkasse on two devices. **[OPEN-C](#open-c):** whether a number generated but never sent can be given back.
+<a id="req-012"></a>**REQ-012 — Invoice numbers never collide (SHALL).** No two invoices of one performer SHALL ever carry the same [invoice number](#invoice-number), however many devices the performer uses and whether or not those devices are online or available. Each device SHALL issue numbers only from its own [number range](#number-range). abendkasse SHALL NOT need any synchronisation between devices for this. Rationale: invoice numbers must be unique (§14 (4) no. 4 UStG). Thomas invoices from both laptop and phone and does not want to synchronise them by hand, nor depend on one device being at hand (Thomas, 11 November 2026). Several independent number ranges are allowed if each number is issued once (UStAE 14.5 (10)). **[OPEN-A](#open-a):** the number format and how a range is kept from being reused.
+
+<a id="req-038"></a>**REQ-038 — Number proposed, editable, checked (SHALL).** abendkasse SHALL pre-fill the next number of the device's range. The counter starts at 001 each year. The performer SHALL be able to edit the number, so that numbering continues from invoices written before abendkasse. IF an edited number belongs to another range, or already exists on this device or in the invoice folder, THEN abendkasse SHALL refuse it and say why. WHERE the invoice folder is readable ([REQ-019](#req-019)), abendkasse SHALL also check the numbers found there.
+
+<a id="req-039"></a>**REQ-039 — Correcting an invoice (SHALL).** abendkasse SHALL let the performer correct the most recent invoice of the device's range and regenerate it. By default the corrected invoice keeps its number and replaces the old PDF. The performer SHALL be able to choose instead that the correction takes the next number. Then the old PDF is kept. Rationale: a mistake noticed before sending is fixed without a gap in the numbers. Once the client has the invoice, a correction under the same number leaves two different documents with one number. abendkasse cannot know whether the invoice was sent, so the performer chooses (Thomas, 11 November 2026).
 
 <a id="req-013"></a>**REQ-013 — Invoice date (SHALL).** The invoice date SHALL default to today. The performer SHALL be able to change it.
 
@@ -79,13 +85,21 @@ Version: 0.1 draft | 11 November 2026
 
 <a id="req-019"></a>**REQ-019 — The PDF is saved before it is sent (SHALL).** WHEN the performer presses the button of [REQ-014](#req-014), THEN abendkasse SHALL save the PDF before it opens the sending step. On platforms that let a web app write to a chosen folder, the performer SHALL choose that folder once and abendkasse SHALL save there without asking again. On the others, abendkasse SHALL hand the file to the platform's save or download step. Rationale: the saved PDFs are the performer's archive. A PDF only attached to an email can be lost with the email. Note: writing to a chosen folder works on desktop Chrome and Edge ([File System Access API](glossary.md#file-system-access-api)), not on phones.
 
-<a id="req-020"></a>**REQ-020 — File name (SHALL).** The PDF SHALL be named from the invoice number, the gig date and the venue, so that a folder of invoices sorts by number. Proposal: `2026-003_2026-09-19_Club-Example.pdf`, in a folder per year. **[OPEN-D](#open-d):** the naming scheme.
+<a id="req-020"></a>**REQ-020 — File name (SHALL).** The performer SHALL choose the file-name scheme in the profile, from these presets:
+
+| Preset | Example |
+|---|---|
+| Invoice, number, venue (default) | `Rechnung_2026-A003_Club-Example.pdf` |
+| Stage name, number, venue | `Tante-Example_2026-A003_Club-Example.pdf` |
+| Own pattern | `{nummer}_{datum}_{venue}.pdf` |
+
+An own pattern SHALL contain `{nummer}`; abendkasse SHALL refuse one that does not. The stage-name preset SHALL use the legal name where no stage name is set. Umlauts and characters not allowed in file names SHALL be replaced (`ü` → `ue`, space → `-`). The PDFs SHALL go into a folder per year of the invoice date (`2026/`). Rationale: every scheme contains the invoice number, so abendkasse can read the numbers back from the folder ([REQ-038](#req-038)). Thomas chose the presets and the default (11 November 2026).
 
 <a id="req-021"></a>**REQ-021 — Retention is the performer's (SHALL).** abendkasse SHALL tell the performer, in its documentation and once when the first invoice is saved, that invoices must be kept for eight years (§14b UStG) and that abendkasse does not keep them. Rationale: abendkasse has no server ([REQ-024](#req-024)). Browser storage can be cleared by the browser or the user. The saved PDF files are the archive.
 
 ## 7. Sending
 
-<a id="req-022"></a>**REQ-022 — Email pre-filled with the PDF attached (SHALL).** AFTER the PDF is saved, abendkasse SHALL open the platform's sending step with the PDF attached, a subject and a body text pre-filled from templates in the profile. The performer SHALL review and send it; abendkasse SHALL NOT send anything itself. Default subject: "Rechnung 2026-003 – Example Night, 19.09.2026". Rationale: sending stays under the performer's control. abendkasse needs no email account. **[OPEN-B](#open-b):** how the attachment reaches the email on each platform.
+<a id="req-022"></a>**REQ-022 — Email pre-filled with the PDF attached (SHALL).** AFTER the PDF is saved, abendkasse SHALL open the platform's sending step with the PDF attached, a subject and a body text pre-filled from templates in the profile. The performer SHALL review and send it; abendkasse SHALL NOT send anything itself. Default subject: "Rechnung 2026-A003 – Example Night, 19.09.2026". Rationale: sending stays under the performer's control. abendkasse needs no email account. **[OPEN-B](#open-b):** how the attachment reaches the email on each platform.
 
 <a id="req-023"></a>**REQ-023 — Client email address (SHOULD).** abendkasse SHOULD store an email address per client and pre-fill it as the recipient where the platform allows. Note: the [share sheet](glossary.md#share-sheet) on phones takes no recipient. The performer then picks it in the email app.
 
@@ -93,7 +107,7 @@ Version: 0.1 draft | 11 November 2026
 
 <a id="req-024"></a>**REQ-024 — No server, no tracking (SHALL).** All profile, client, venue and invoice data SHALL stay on the performer's device. abendkasse SHALL NOT send any of it over the network. It SHALL contain no analytics or tracking. The repository, its examples and its tests SHALL use invented data only. Rationale: invoices hold the performer's bank details, tax number and address. A free project without a server costs nothing to run.
 
-<a id="req-025"></a>**REQ-025 — Backup of the fixed data (SHALL).** abendkasse SHALL export the profile, the clients, the venues and the invoice counter to one file, and import it again on the same or another device. It SHOULD ask the browser for persistent storage. Rationale: browser storage can be cleared. Losing the counter risks a duplicate invoice number. Losing the profile and clients brings back the friction abendkasse removes.
+<a id="req-025"></a>**REQ-025 — Backup of the fixed data (SHALL).** abendkasse SHALL export the profile, the clients, the venues and the device's counter to one file, and import it again on the same or another device. Importing on another device SHALL NOT take over the source device's [number range](#number-range). It SHOULD ask the browser for persistent storage. Rationale: browser storage can be cleared. Losing the counter risks a duplicate invoice number. Losing the profile and clients brings back the friction abendkasse removes.
 
 ## 9. Platforms, installation and distribution
 
@@ -107,7 +121,7 @@ Version: 0.1 draft | 11 November 2026
 
 <a id="req-030"></a>**REQ-030 — Tax handling as data (SHALL).** The invoice data SHALL record the tax case (first release: small-business rule only), the net amount, the VAT rate and the VAT amount, even though the first release fixes the rate at zero. Acceptance: adding VAT in a later release changes the PDF layout and the input screen, not the stored data model. Rationale: the small-business limits since 2025 (€25,000 turnover in the previous year, €100,000 in the current one, counting all self-employed turnover) mean many DJs charge VAT.
 
-<a id="req-031"></a>**REQ-031 — Open source (SHALL).** abendkasse SHALL be published under an open-source licence in the public repository [thomaswening/abendkasse](https://github.com/thomaswening/abendkasse). **[OPEN-H](#open-h):** which licence.
+<a id="req-031"></a>**REQ-031 — Open source (SHALL).** abendkasse SHALL be published under GPL-3.0 in the public repository [thomaswening/abendkasse](https://github.com/thomaswening/abendkasse) ([OPEN-H](#open-h)).
 
 <a id="req-032"></a>**REQ-032 — No tax advice (SHALL).** The README and the app SHALL state that abendkasse is not tax advice and that the performer is responsible for the correctness of the invoices.
 
@@ -121,7 +135,9 @@ Listed so that the first release leaves room for them. Not detailed until a rele
 
 <a id="req-035"></a>**REQ-035 — Logo and custom look (COULD).** A later release COULD add a logo, colours and a choice of fonts.
 
-<a id="req-036"></a>**REQ-036 — More items per invoice (COULD).** A later release COULD add items such as travel costs, or several gigs on one invoice.
+<a id="req-036"></a>**REQ-036 — More items per invoice (COULD).** A later release COULD add items besides the fee. The common ones for DJs: travel costs (flat or per kilometre), accommodation, equipment hire, extra time, a deposit deducted, and several gigs for one client on one invoice. The first release's data model already holds a list of items.
+
+<a id="req-040"></a>**REQ-040 — Invoice folder in the cloud on phones (COULD).** A later release COULD read and write the invoice folder in a cloud drive (for example Google Drive) directly from a phone, so that phones can check numbers against the folder ([REQ-038](#req-038)) as desktops do. It needs a sign-in with the cloud provider and a registered app there.
 
 <a id="req-037"></a>**REQ-037 — Cancellation invoices (COULD).** A later release COULD issue a cancellation invoice (*Stornorechnung*) that refers to a wrong invoice.
 
@@ -130,21 +146,21 @@ Listed so that the first release leaves room for them. Not detailed until a rele
 
 An open decision is resolved immediately before the work that depends on it, not in advance: several are better settled with evidence from a spike than by argument, and one settled early on a guess is worse than one settled late on a measurement. The roadmap names, per phase, which decisions that phase needs, and a phase is not complete until they are recorded here. Each decision below therefore carries a **Needed by** note saying what it blocks. A decision stays in this section once settled, marked **Resolved**, so that the reasoning survives the decision.
 
-<a id="open-a"></a>**OPEN-A — Invoice numbers on two devices.** [REQ-012](#req-012), [REQ-025](#req-025). Without a server, each device keeps its own counter. A performer who writes invoices on both phone and laptop could issue the same number twice. Candidates: (1) one device is the invoicing device, the other is not used for invoices; (2) the counter moves with the backup file of [REQ-025](#req-025), and the performer imports it when switching; (3) numbers carry a device letter (`2026-A003`); (4) on desktop, abendkasse reads the highest number from the PDFs in the invoice folder. **Proposed:** (1) for the first release, with (4) as a check where the folder is readable. **Needed by:** the invoice-number implementation.
+<a id="open-a"></a>**OPEN-A — Invoice numbers on several devices.** [REQ-012](#req-012), [REQ-025](#req-025), [REQ-038](#req-038). How invoice numbers stay unique when one performer invoices from several devices without a server. **Resolved** in part (Thomas, 11 November 2026): each device issues from its own [number range](#number-range). Rationale: it is the only scheme without a server that rules out collisions while any device may be offline or lost. One invoicing device, or a counter carried in the backup file, needs manual synchronisation. A synced cloud folder updates with a delay. Still open: the format and how a range is kept from being used twice, for example after a reinstall. **Proposed:** `YYYY-<letter><counter>` (`2026-A003`); the performer picks the letter when setting up a device; abendkasse offers only letters not found in the invoice folder or the imported backup, and says that a letter is never reused. **Needed by:** the invoice-number implementation.
 
 <a id="open-b"></a>**OPEN-B — How the PDF reaches the email.** [REQ-022](#req-022). A `mailto:` link cannot attach a file. The plan is the [Web Share API](glossary.md#web-share-api), which opens the [share sheet](glossary.md#share-sheet) with the PDF, subject and text. It works on Android and iOS. On Windows Chrome and Edge it is uncertain. Fallbacks: (1) save the PDF, open a pre-filled `mailto:` email and let the performer drag the PDF in; (2) offer an email draft file (`.eml`) with the PDF attached, which the desktop email program opens. **Needed by:** the sending flow. A spike on every [reference platform](#reference-platforms) settles it.
 
-<a id="open-c"></a>**OPEN-C — A number generated but never sent.** [REQ-012](#req-012). The button of [REQ-014](#req-014) assigns a number, saves the PDF and opens the email. If the performer then spots a mistake, should abendkasse let them correct the last invoice and regenerate it under the same number, as long as no later invoice exists? **Proposed:** yes, "correct the last invoice" replaces its PDF and keeps its number. Once a later invoice exists, the old one is final. **Needed by:** the invoice-number implementation.
+<a id="open-c"></a>**OPEN-C — Correcting an invoice already generated.** [REQ-039](#req-039). Whether a correction keeps the invoice's number. **Resolved** (Thomas, 11 November 2026): by default it keeps the number; the performer can choose the next number instead. Rationale: keeping the number avoids gaps for a mistake found before sending. Only the performer knows whether the invoice has been sent.
 
-<a id="open-d"></a>**OPEN-D — File naming.** [REQ-020](#req-020). **Proposed:** `<invoice number>_<gig date>_<venue>.pdf`, e.g. `2026-003_2026-09-19_Club-Example.pdf`, in a folder per year (`2026/`). Umlauts and spaces in the venue name are replaced (`Ü` → `Ue`, space → `-`). The reference invoice's scheme (`Rechnung_TANTE_THOMAS_<venue>_<year>_<nn>`) does not sort by number across venues. **Needed by:** the saving implementation.
+<a id="open-d"></a>**OPEN-D — File naming.** [REQ-020](#req-020). How the PDFs are named. **Resolved** (Thomas, 11 November 2026): the performer chooses from presets, default `Rechnung_<number>_<venue>.pdf`, every preset containing the number. Rationale: performers name files differently. The number in every name lets abendkasse check numbers against the folder.
 
-<a id="open-e"></a>**OPEN-E — Test devices.** [Reference platforms](#reference-platforms). Which phone, tablet and computer Thomas tests on, and whether a Mac and an iPhone are available at all. **Needed by:** the sending spike ([OPEN-B](#open-b)).
+<a id="open-e"></a>**OPEN-E — Test devices.** [Reference platforms](#reference-platforms). Which devices Thomas tests on. **Resolved** in part (Thomas, 11 November 2026): the first platform is his Windows laptop. Still open: which Android phone, and whether an iPhone and a Mac are available. **Needed by:** the sending spike ([OPEN-B](#open-b)).
 
-<a id="open-f"></a>**OPEN-F — Legal check of the mandatory details.** [REQ-005](#req-005), [REQ-008](#req-008), [REQ-021](#req-021). The mandatory details are taken from §14 (4) UStG and §34a UStDV, the retention period from §14b UStG, the limits from §19 UStG, each as in force on 1 January 2025. They are checked against the current texts once. **Needed by:** the first release.
+<a id="open-f"></a>**OPEN-F — Legal check of the mandatory details.** [REQ-005](#req-005), [REQ-008](#req-008), [REQ-012](#req-012), [REQ-021](#req-021). The mandatory details are taken from §14 (4) UStG and §34a UStDV, the retention period from §14b UStG, the limits from §19 UStG, the permission for several number ranges from UStAE 14.5 (10), each as in force on 1 January 2025. They are checked against the current texts once. **Needed by:** the first release.
 
 <a id="open-g"></a>**OPEN-G — PDF generation in the browser.** [REQ-017](#req-017), [REQ-018](#req-018). Candidates: (1) draw the PDF with a JavaScript PDF library (for example pdf-lib or jsPDF); (2) lay the invoice out in HTML and convert it (layout is easy, but conversion in the browser is unreliable); (3) a PDF template with form fields, filled in. **Needed by:** the PDF implementation. Settled with the sending spike or an [ADR](glossary.md#adr).
 
-<a id="open-h"></a>**OPEN-H — Licence.** [REQ-031](#req-031). MIT (anyone may build on it, including closed products) or GPL-3.0 (derived works stay open; Thomas's project Tante uses it). **Needed by:** the first code in the repository.
+<a id="open-h"></a>**OPEN-H — Licence.** [REQ-031](#req-031). MIT or GPL-3.0. **Resolved** (Thomas, 11 November 2026): GPL-3.0. Rationale: distributed forks stay open source, so nobody can turn abendkasse into a closed paid app. Thomas's project Tante uses the same licence.
 
 <a id="revision-history"></a>
 ## 12. Revision history
@@ -154,3 +170,4 @@ Each requirement and open decision states what holds now, with who decided and w
 | Version | Date | Pass | Changes |
 |---|---|---|---|
 | 0.1 | 11 Nov 2026 | Intake | First draft from the intake conversation. [REQ-001](#req-001) to [REQ-037](#req-037); [OPEN-A](#open-a) to [OPEN-H](#open-h). |
+| 0.2 | 11 Nov 2026 | 1 | Per-device [number ranges](#number-range): rewrote [REQ-012](#req-012), added [REQ-038](#req-038) and [REQ-039](#req-039), changed [REQ-025](#req-025). Tax number shown when present ([REQ-005](#req-005)). German screens ([REQ-009](#req-009)). File-name presets ([REQ-020](#req-020)). GPL-3.0 ([REQ-031](#req-031)). Typical extra items listed ([REQ-036](#req-036)). Added [REQ-040](#req-040). Resolved [OPEN-C](#open-c), [OPEN-D](#open-d), [OPEN-H](#open-h); [OPEN-A](#open-a) and [OPEN-E](#open-e) in part; widened [OPEN-F](#open-f). |
