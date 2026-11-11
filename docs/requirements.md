@@ -1,5 +1,5 @@
 # abendkasse: Verifiable Product Requirements
-Version: 0.2 draft | 11 November 2026
+Version: 0.3 draft | 11 November 2026
 
 **Status:**
 
@@ -29,7 +29,7 @@ Version: 0.2 draft | 11 November 2026
 
 <a id="reference-invoice"></a>**The reference invoice** = Thomas's current invoice, made from a Word template (`Rechnung_TANTE_THOMAS_Frau_Holle_2026_06_14.docx`, kept privately, not in this repository). It is a cross-check for layout and content, not a specification. Its personal data (address, IBAN, tax number) never appears in this repository, its examples or its tests ([REQ-024](#req-024)).
 
-<a id="reference-platforms"></a>**Reference platforms** (used by every platform requirement): Windows 11 with current Chrome and Edge; macOS with current Safari and Chrome; Android with current Chrome; iOS with current Safari. "Current" means the stable release at the time of testing. Windows 11 is the first platform: Thomas writes most invoices on his Windows laptop (Thomas, 11 November 2026). **[OPEN-E](#open-e):** which phones and Apple devices Thomas can test on.
+<a id="reference-platforms"></a>**Reference platforms** (used by every platform requirement): Windows 11 with current Chrome and Edge; macOS with current Safari and Chrome; Android with current Chrome; iOS with current Safari. "Current" means the stable release at the time of testing. Windows 11 is the first platform: Thomas writes most invoices on his Windows laptop, with Gmail in the browser. He tests phones on Android with the Gmail app. No Apple device is available for testing yet ([OPEN-E](#open-e)).
 
 ## 1. Purpose and users
 
@@ -154,7 +154,7 @@ An open decision is resolved immediately before the work that depends on it, not
 
 <a id="open-d"></a>**OPEN-D — File naming.** [REQ-020](#req-020). How the PDFs are named. **Resolved** (Thomas, 11 November 2026): the performer chooses from presets, default `Rechnung_<number>_<venue>.pdf`, every preset containing the number. Rationale: performers name files differently. The number in every name lets abendkasse check numbers against the folder.
 
-<a id="open-e"></a>**OPEN-E — Test devices.** [Reference platforms](#reference-platforms). Which devices Thomas tests on. **Resolved** in part (Thomas, 11 November 2026): the first platform is his Windows laptop. Still open: which Android phone, and whether an iPhone and a Mac are available. **Needed by:** the sending spike ([OPEN-B](#open-b)).
+<a id="open-e"></a>**OPEN-E — Test devices.** [Reference platforms](#reference-platforms). Which devices and email programs Thomas tests on. **Resolved** (Thomas, 11 November 2026): a Windows laptop with Chrome, Edge and Gmail in the browser; an Android phone with Chrome and the Gmail app. macOS and iOS stay reference platforms but are untested until someone with an Apple device tests them. Rationale: these are the devices Thomas uses for invoices.
 
 <a id="open-f"></a>**OPEN-F — Legal check of the mandatory details.** [REQ-005](#req-005), [REQ-008](#req-008), [REQ-012](#req-012), [REQ-021](#req-021). The mandatory details are taken from §14 (4) UStG and §34a UStDV, the retention period from §14b UStG, the limits from §19 UStG, the permission for several number ranges from UStAE 14.5 (10), each as in force on 1 January 2025. They are checked against the current texts once. **Needed by:** the first release.
 
@@ -171,3 +171,4 @@ Each requirement and open decision states what holds now, with who decided and w
 |---|---|---|---|
 | 0.1 | 11 Nov 2026 | Intake | First draft from the intake conversation. [REQ-001](#req-001) to [REQ-037](#req-037); [OPEN-A](#open-a) to [OPEN-H](#open-h). |
 | 0.2 | 11 Nov 2026 | 1 | Per-device [number ranges](#number-range): rewrote [REQ-012](#req-012), added [REQ-038](#req-038) and [REQ-039](#req-039), changed [REQ-025](#req-025). Tax number shown when present ([REQ-005](#req-005)). German screens ([REQ-009](#req-009)). File-name presets ([REQ-020](#req-020)). GPL-3.0 ([REQ-031](#req-031)). Typical extra items listed ([REQ-036](#req-036)). Added [REQ-040](#req-040). Resolved [OPEN-C](#open-c), [OPEN-D](#open-d), [OPEN-H](#open-h); [OPEN-A](#open-a) and [OPEN-E](#open-e) in part; widened [OPEN-F](#open-f). |
+| 0.3 | 11 Nov 2026 | 1, while planning the sending spike | Resolved [OPEN-E](#open-e): test devices and email programs; Apple platforms untested. |
