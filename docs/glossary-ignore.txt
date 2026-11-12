@@ -9,3 +9,4 @@ README  # general computing vocabulary
 VAT  # general tax vocabulary
 SIL  # font licence name, used only in "SIL Open Font License"
 URL  # general computing vocabulary
+API  # general computing vocabulary

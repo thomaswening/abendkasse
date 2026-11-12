@@ -2,7 +2,7 @@
 
 A throwaway test page for the share and PDF spike, built on 12 November 2026.
 It settles [OPEN-B](../../requirements.md#open-b), [OPEN-G](../../requirements.md#open-g) and the save path of [REQ-019](../../requirements.md#req-019).
-The spike report holds the results; this folder is the evidence behind it.
+The [spike report](../2026-11-12-share-and-pdf.md) holds the results; this folder is the evidence behind it.
 It is not product code and is deleted or frozen once the report is merged.
 
 ## Running it
