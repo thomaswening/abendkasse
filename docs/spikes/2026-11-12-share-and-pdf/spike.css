@@ -1,0 +1,93 @@
+:root {
+  --background: #ffffff;
+  --text: #1c1c22;
+  --muted: #5d5d6a;
+  --card: #f4f4f7;
+  --border: #d6d6de;
+  --accent: #b5700a;
+  --ok: #1d7a3a;
+  --fail: #b3261e;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #15151b;
+    --text: #e8e8ee;
+    --muted: #a0a0ae;
+    --card: #20202a;
+    --border: #3a3a48;
+    --accent: #f0b43c;
+    --ok: #5fcf80;
+    --fail: #ff8a80;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font: 16px/1.5 system-ui, sans-serif;
+}
+main { max-width: 52rem; margin: 0 auto; padding: 1rem; }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.15rem; margin-top: 0; }
+a { color: var(--accent); }
+section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.applies { color: var(--muted); font-style: italic; }
+.hint { color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem; }
+label { display: block; margin: 0.5rem 0; }
+input, select, textarea {
+  font: inherit;
+  width: 100%;
+  padding: 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--background);
+  color: var(--text);
+}
+textarea { min-height: 4rem; }
+button {
+  font: inherit;
+  padding: 0.5rem 0.9rem;
+  margin: 0.2rem 0.3rem 0.2rem 0;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--background);
+  cursor: pointer;
+}
+button.secondary { background: transparent; color: var(--accent); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+td, th { border: 1px solid var(--border); padding: 0.25rem 0.5rem; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
+.log {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.log:empty { display: none; }
+.observations { border-top: 1px solid var(--border); margin-top: 0.75rem; padding-top: 0.5rem; }
+.drag-sources { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.drag-chip {
+  display: inline-block;
+  padding: 0.5rem 0.8rem;
+  border: 2px dashed var(--accent);
+  border-radius: 6px;
+  cursor: grab;
+  color: var(--text);
+  text-decoration: none;
+}
+.ok { color: var(--ok); }
+.fail { color: var(--fail); }
