@@ -1,0 +1,9 @@
+# General vocabulary that needs no glossary entry. One term per line, then a reason.
+CSV  # general computing vocabulary
+DIN  # German standards body, used only in "DIN 5008"
+HTML  # general computing vocabulary
+IBAN  # general banking vocabulary
+MIT  # licence name
+PDF  # general computing vocabulary
+README  # general computing vocabulary
+VAT  # general tax vocabulary
