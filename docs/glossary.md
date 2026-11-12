@@ -34,11 +34,11 @@ Fixed labels after an entry relate it to others: **Kind of** names the broader t
 - See also: [profile](#profile)
 - Defined in: [requirements.md](requirements.md#gig-data)
 
-<a id="invoice-number"></a>**invoice number** *(project)*: the number that identifies an invoice uniquely for the performer, built from the year, the device's [number range](#number-range) and a counter. Example: `2026-A003`.
+<a id="invoice-number"></a>**invoice number** *(project)*: the number that identifies an invoice uniquely for the performer. Either a timestamp number from the moment of issue or a yearly counter. Example: `2026-1112-1834`, or `2026-003`.
 
 - Defined in: [requirements.md](requirements.md#invoice-number)
 
-<a id="number-range"></a>**number range** *(project)*: a series of invoice numbers that only one device issues, marked by a letter. Example: the laptop issues `2026-A001`, `2026-A002`; the phone `2026-B001`.
+<a id="number-range"></a>**number range** (Nummernkreis) *(domain)*: a series of invoice numbers, each issued once. German law allows any number of them, for example per year or per day. Example: `2026-001`, `2026-002`, … is the range for 2026.
 
 - See also: [invoice number](#invoice-number)
 - Defined in: [requirements.md](requirements.md#number-range)
