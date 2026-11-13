@@ -1,5 +1,5 @@
 # abendkasse: Verifiable Product Requirements
-Version: 0.7 draft | 12 November 2026
+Version: 0.8 draft | 13 November 2026
 
 **Status:**
 
@@ -9,8 +9,8 @@ Version: 0.7 draft | 12 November 2026
 - The first release supports one tax case: the [small-business rule](glossary.md#small-business-rule) of §19 [UStG](glossary.md#ustg).
   Its first platform is a Windows laptop.
   Phones follow in the same release.
-- The biggest technical risk is sending the PDF as an email attachment from a browser ([OPEN-B](#open-b)).
-  A spike settles it before the sending flow is built.
+- Sending the PDF as an email attachment from a browser was the biggest technical risk.
+  The [share and PDF spike](spikes/2026-11-12-share-and-pdf.md) measured it; [ADR-0001](adr/0001-share-on-phones-gmail-compose-on-computers.md) proposes how ([OPEN-B](#open-b)).
   [Invoice numbers](glossary.md#invoice-number) are timestamps by default, or a classic counter for [performers](glossary.md#performer) with one device ([OPEN-A](#open-a)).
 - Open decisions are collected in [section 11](#open-decisions); how the document got here is in the [revision history](#revision-history).
 
@@ -233,7 +233,9 @@ The performer SHALL be able to change it.
 Creating an invoice SHALL take one screen with the [gig data](#gig-data) fields and one button that generates, saves and sends ([REQ-017](#req-017), [REQ-019](#req-019)).
 
 - **Acceptance:** for a known venue, the performer fills in at most six fields (venue, event name, date, start time, end time, fee) and presses one button.
-  The share or email screen then opens with the PDF attached.
+  On a phone or tablet, the share or email screen then opens with the PDF attached.
+  On a computer, the email opens pre-filled, and the PDF is one drag away in the browser's download pop-up.
+- **Rationale:** on a computer no tested way attaches the PDF to Gmail in the browser without that drag ([ADR-0001](adr/0001-share-on-phones-gmail-compose-on-computers.md)).
 
 <a id="req-015"></a>**REQ-015 — Sensible defaults (SHOULD).**
 The gig date SHOULD default to today WHEN the invoice is started at or after 18:00, and to yesterday otherwise.
@@ -286,6 +288,7 @@ On the other platforms, abendkasse SHALL hand the file to the platform's save or
 - **Note:** writing to a chosen folder works on desktop Chrome and Edge ([File System Access API](glossary.md#file-system-access-api)), not in Firefox, Safari or on phones.
   In Firefox the PDF goes through the download step.
   The folder check of [REQ-038](#req-038) is then not available.
+- **Note:** on a computer, abendkasse also downloads the PDF it wrote to the folder, so that it can be dragged into the email ([ADR-0001](adr/0001-share-on-phones-gmail-compose-on-computers.md)).
 
 <a id="req-020"></a>**REQ-020 — File name (SHALL).**
 The performer SHALL choose the file-name scheme in the profile, from these presets:
@@ -319,17 +322,19 @@ It SHALL say that abendkasse does not keep them.
 AFTER the PDF is saved, abendkasse SHALL open the platform's sending step with the PDF attached, a subject and a body text pre-filled from templates in the profile.
 The performer SHALL review and send it.
 abendkasse SHALL NOT send anything itself.
+On a computer, the performer SHALL choose in the profile whether the email opens in Gmail in the browser (the default) or in the computer's default email program.
 
 - **Example:** the default subject "Rechnung 2026-1112-1834 – Example Night, 19.09.2026".
 - **Rationale:** sending stays under the performer's control.
   abendkasse needs no email account.
-- **Open:** how the attachment reaches the email on each platform ([OPEN-B](#open-b)).
+- **Decided:** how the attachment reaches the email on each platform: [ADR-0001](adr/0001-share-on-phones-gmail-compose-on-computers.md) (proposed, resolves [OPEN-B](#open-b)).
 
 <a id="req-023"></a>**REQ-023 — Client email address (SHOULD).**
 abendkasse SHOULD store an email address per client and pre-fill it as the recipient where the platform allows.
 
 - **Note:** the [share sheet](glossary.md#share-sheet) on phones takes no recipient.
   The performer then picks it in the email app.
+  On a computer, the pre-filled email carries the recipient.
 
 ## 8. Data and privacy
 
@@ -343,6 +348,9 @@ The repository, its examples and its tests SHALL use invented data only.
 - **Rationale:** invoices hold the performer's bank details, tax number and address.
   A free project without a server costs nothing to run.
 - **Decided:** Thomas, in the intake, 11 November 2026 (no server).
+- **Note:** the performer's own sending step ([REQ-022](#req-022)) is not abendkasse sending data.
+  It opens on the performer's press and carries the recipient, subject and body to the email program they chose.
+  With Gmail in the browser, these reach Google when the compose window opens ([ADR-0001](adr/0001-share-on-phones-gmail-compose-on-computers.md)).
 
 <a id="req-025"></a>**REQ-025 — Backup of the fixed data (SHALL).**
 abendkasse SHALL export the profile, the clients, the venues and the counter to one file, and import it again on the same or another device.
@@ -491,6 +499,10 @@ How does the PDF get into the performer's email as an attachment, on each refere
 - **Candidates:** fallback 2: an email draft file (`.eml`) with the PDF attached, which a desktop email program opens.
 - **Needed by:** the sending flow.
   A spike on the [reference platforms](#reference-platforms) settles it.
+- **Resolved** (proposed, pending review; [ADR-0001](adr/0001-share-on-phones-gmail-compose-on-computers.md)): phones and tablets share the PDF through the share sheet.
+  Computers save and download the PDF and open a pre-filled email in Gmail or the default email program; the performer drags the PDF in.
+  The `.eml` draft is out.
+  Evidence: the [share and PDF spike](spikes/2026-11-12-share-and-pdf.md).
 
 <a id="open-c"></a>**OPEN-C — Correcting an invoice already generated.** [REQ-039](#req-039).
 Does a correction keep the invoice's number?
@@ -553,3 +565,4 @@ Git has every earlier wording.
 | 0.5 | 12 Nov 2026 | Second review of PR 1 | Item line editable per invoice ([REQ-006](#req-006)). Setup flow for further devices written out, with its one remaining gap ([OPEN-A](#open-a)). |
 | 0.6 | 12 Nov 2026 | Second review of PR 1 | Timestamp and counter schemes replace per-device letters: rewrote [REQ-012](#req-012), [REQ-038](#req-038), [REQ-041](#req-041), the defined terms [invoice number](#invoice-number) and [number range](#number-range). Simplified [REQ-025](#req-025) and [REQ-039](#req-039). Resolved [OPEN-A](#open-a). |
 | 0.7 | 12 Nov 2026 | Format | Brought to the new entry layout (claude-config PR 39): each requirement and open decision is a statement and a labelled list, one sentence per source line. Open decisions are phrased as questions. No requirement changed in substance. |
+| 0.8 | 13 Nov 2026 | Share and PDF spike | Resolved [OPEN-B](#open-b) as proposed in [ADR-0001](adr/0001-share-on-phones-gmail-compose-on-computers.md). Acceptance per kind of device ([REQ-014](#req-014)). Second copy as a download ([REQ-019](#req-019)). Email program chosen in the profile ([REQ-022](#req-022)). Note on the sending step ([REQ-024](#req-024)). |
