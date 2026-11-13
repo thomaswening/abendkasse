@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>abendkasse spike: share and PDF</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <meta name="theme-color" content="#181820">
+  <link rel="stylesheet" href="spike.css">
+</head>
+<body>
+<main>
+  <h1>abendkasse spike: share and PDF</h1>
+  <p>
+    Throwaway test page for <a href="https://github.com/thomaswening/abendkasse/blob/main/docs/requirements.md#open-b">OPEN-B</a>, <a href="https://github.com/thomaswening/abendkasse/blob/main/docs/requirements.md#open-g">OPEN-G</a>
+    and the save path of <a href="https://github.com/thomaswening/abendkasse/blob/main/docs/requirements.md#req-019">REQ-019</a>.
+    All data on it is invented. Nothing leaves the device except what you send yourself.
+  </p>
+  <p>
+    <strong>How to use it:</strong> open this page in each browser, work through the questions that apply,
+    pick an outcome and add notes. At the end of each browser, press <em>Copy results</em> and paste them into the chat.
+    Your answers are kept in this browser until you clear them.
+  </p>
+
+  <section id="environment">
+    <h2>This browser</h2>
+    <label>Device label <input id="device-label" placeholder="for example: Windows laptop, Pixel phone"></label>
+    <table id="environment-table"></table>
+    <label>Recipient for email tests (only kept in this browser)
+      <input id="recipient" type="email" value="booking@example.com">
+    </label>
+    <p class="hint">Put your own address here if you want to send test emails to yourself.</p>
+    <p id="pdf-status">Preparing the test PDF …</p>
+  </section>
+
+  <section class="question" data-question="1">
+    <h2>1. Android: share sheet into the Gmail app</h2>
+    <p class="applies">Android, in Chrome and in Firefox.</p>
+    <p>Does <code>navigator.share</code> with the PDF open Gmail with the attachment, subject and text filled in?</p>
+    <ol>
+      <li>Press variant A and pick Gmail. Note what arrives: attachment, subject, text. Discard the draft.</li>
+      <li>Repeat with B, C and D. D shares no file and only shows what the text fields do on their own.</li>
+    </ol>
+    <div class="share-buttons"></div>
+  </section>
+
+  <section class="question" data-question="2">
+    <h2>2. iOS</h2>
+    <p class="applies">Not testable: no Apple device. Recorded as not tested.</p>
+  </section>
+
+  <section class="question" data-question="3">
+    <h2>3. Windows: share sheet in Chrome, Edge and Firefox</h2>
+    <p class="applies">Windows, in Chrome, Edge and Firefox.</p>
+    <p>Is file sharing offered (<code>canShare</code>)? Which targets appear in the Windows share dialog? Do subject and text arrive?</p>
+    <ol>
+      <li>Read the <em>canShare</em> results below the buttons.</li>
+      <li>Press variant A. Note the targets the Windows dialog lists. Try Gmail or Mail if listed, otherwise the target that looks most useful.</li>
+      <li>Try B to D if A worked.</li>
+    </ol>
+    <div class="share-buttons"></div>
+  </section>
+
+  <section class="question" data-question="4">
+    <h2>4. Windows: save, open Gmail pre-filled, drag the PDF in</h2>
+    <p class="applies">Windows, in each browser, with Gmail in the browser signed in.</p>
+    <p>
+      Does "save the PDF, open Gmail's compose page pre-filled, drag the PDF in" take at most two extra actions?
+      Can the PDF be dragged straight from this page into Gmail?
+    </p>
+    <ol>
+      <li>Press <em>Save and open Gmail</em>. The PDF is downloaded and a compose window opens with recipient, subject and body.
+        Attach the PDF the quickest way you find, and count your actions after the button (a drag counts as one).</li>
+      <li>In the compose window, drag each of the chips below into the message, one at a time. Note which ones become an attachment.</li>
+      <li>Optional: <em>Save and open mailto</em> does the same through your default mail handler.</li>
+    </ol>
+    <p>
+      <button id="save-and-gmail">Save and open Gmail</button>
+      <button id="save-and-mailto">Save and open mailto</button>
+    </p>
+    <p>Drag sources:</p>
+    <div class="drag-sources">
+      <span class="drag-chip" draggable="true" data-drag="download-url-blob">a. DownloadURL, blob URL</span>
+      <span class="drag-chip" draggable="true" data-drag="download-url-https">b. DownloadURL, https URL</span>
+      <span class="drag-chip" draggable="true" data-drag="file-item">c. File in the drag data</span>
+      <a class="drag-chip" id="plain-link" data-drag="plain-link" download>d. plain link to the PDF</a>
+    </div>
+  </section>
+
+  <section class="question" data-question="5">
+    <h2>5. Windows: .eml draft (five minutes at most)</h2>
+    <p class="applies">Windows, once (any browser).</p>
+    <p>Does an <code>.eml</code> file with <code>X-Unsent: 1</code> and the PDF attached open as a ready draft?</p>
+    <ol>
+      <li>Press <em>Download .eml</em> and open the file from the download list.</li>
+      <li>Note which program opens it, and whether recipient, subject, body and attachment are there, and whether it is a draft you can send.</li>
+    </ol>
+    <p><button id="download-eml">Download .eml</button></p>
+  </section>
+
+  <section class="question" data-question="6">
+    <h2>6. Installed app writes into a Google Drive folder</h2>
+    <p class="applies">Windows, in Chrome and Edge, installed as an app.</p>
+    <p>Can the installed app write into a chosen Google Drive for desktop folder, and keep the permission after a browser restart?</p>
+    <ol>
+      <li>Install this page as an app (install icon in the address bar) and open it from the app window.</li>
+      <li>Create an empty test folder, for example <code>G:\My Drive\abendkasse-spike</code>.</li>
+      <li>Press <em>Choose folder</em> and pick that folder; allow editing.</li>
+      <li>Press <em>Write test PDF</em>. Check in Explorer and on drive.google.com that <code>2026\Rechnung_….pdf</code> arrived.</li>
+      <li>Close every window of the browser, start it again, open the app, and read <em>Permission after load</em>. Press <em>Write test PDF</em> again and note whether a prompt appears and what it offers.</li>
+    </ol>
+    <p>
+      <button id="choose-folder">Choose folder</button>
+      <button id="write-test-pdf">Write test PDF</button>
+      <button id="request-permission">Ask for permission again</button>
+    </p>
+  </section>
+
+  <section class="question" data-question="7">
+    <h2>7. List the folder to find the highest invoice number</h2>
+    <p class="applies">Windows, after question 6, same folder.</p>
+    <p>Can the app list the folder's file names to find the highest invoice number (<a href="https://github.com/thomaswening/abendkasse/blob/main/docs/requirements.md#req-038">REQ-038</a>), and how fast with 50 files?</p>
+    <ol>
+      <li>Press <em>Write 50 test files</em> (into <code>listing-test\2026\</code> inside the chosen folder). Wait until Drive has synced.</li>
+      <li>Press <em>List and find highest</em> a few times. The first run may be slower.</li>
+      <li>Press <em>Delete test files</em> when done.</li>
+    </ol>
+    <p>
+      <button id="write-fifty">Write 50 test files</button>
+      <button id="list-folder">List and find highest</button>
+      <button id="delete-test-files">Delete test files</button>
+    </p>
+  </section>
+
+  <section class="question" data-question="8">
+    <h2>8. Android: where does a saved PDF end up?</h2>
+    <p class="applies">Android, in Chrome and Firefox.</p>
+    <p>Where does a saved PDF end up, and how many taps does it take to get it into Google Drive?</p>
+    <ol>
+      <li>Press <em>Download PDF</em>. Find the file (notification, Files app) and note where it is.</li>
+      <li>Get it into a Drive folder the quickest way you find. Count the taps after the button.</li>
+      <li>Compare: share variant C (file only) and pick "Drive" (Save to Drive). Count the taps.</li>
+    </ol>
+    <p>
+      <button id="download-pdf">Download PDF</button>
+      <button id="share-to-drive">Share file only (for Drive)</button>
+    </p>
+  </section>
+
+  <section class="question" data-question="9">
+    <h2>9. pdf-lib: layout, umlauts, identical bytes, attached data</h2>
+    <p class="applies">Every browser.</p>
+    <p>
+      Does pdf-lib reproduce the reference layout (<a href="https://github.com/thomaswening/abendkasse/blob/main/docs/requirements.md#req-018">REQ-018</a>) on one A4 page with an embedded font,
+      correct umlauts and „quotes“? Are the bytes identical across platforms (<a href="https://github.com/thomaswening/abendkasse/blob/main/docs/requirements.md#req-017">REQ-017</a>)?
+      Can it embed the invoice data as a file attachment (<a href="https://github.com/thomaswening/abendkasse/blob/main/docs/requirements.md#req-033">REQ-033</a>)?
+    </p>
+    <ol>
+      <li>Press <em>Open PDF</em> and compare it with your reference invoice: header, address window, number and date, item table, note, footer.</li>
+      <li>Check the umlauts (Großer, Köln, Musterstraße, Gemäß) and the quotes around „Example Night“.</li>
+      <li>Read the hash below. Every browser should show the same; the reference from Node is shown next to it.</li>
+      <li>Check the attachment: in Firefox's PDF viewer open the sidebar and its attachments view; in Acrobat Reader the paper-clip panel. It should hold <code>rechnung.json</code>.</li>
+    </ol>
+    <p>
+      <button id="open-pdf">Open PDF</button>
+      <button id="regenerate-pdf">Generate again and compare</button>
+    </p>
+  </section>
+
+  <section id="results">
+    <h2>Results</h2>
+    <p>
+      <button id="copy-results">Copy results</button>
+      <button id="download-results">Download results (.md)</button>
+      <button id="clear-results" class="secondary">Clear this browser's answers</button>
+    </p>
+    <pre id="results-preview"></pre>
+  </section>
+</main>
+
+<script src="vendor/pdf-lib-1.17.1.min.js"></script>
+<script src="vendor/fontkit-1.1.1.umd.min.js"></script>
+<script src="invoice-pdf.js"></script>
+<script src="spike.js"></script>
+</body>
+</html>
